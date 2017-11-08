@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+    node1:
+        build: ./docker-images/node
+        environment:
+            - NODE_ENV=development
+        volumes:
+            - ./app:/usr/src/app
+        ports:
+            - "3000:3000"
+        working_dir: /usr/src/app
+        depends_on: 
+          - redis
+        command:
+            #"npm install"
+            "node /usr/src/app/index.js 3000"     
+    node2:
+        build: ./docker-images/node
+        environment:
+            - NODE_ENV=development
+        volumes:
+            - ./app:/usr/src/app
+        ports:
+            - "3001:3001"
+        working_dir: /usr/src/app
+        depends_on: 
+          - redis
+        command:
+            #"npm install"
+            "node /usr/src/app/index.js 3001" 
+    redis:
+        image: redis:3.2   
