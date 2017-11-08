@@ -9,8 +9,9 @@ var io = socketio(server);
 app.use(express.static('static'));
 
 io.on('connection', (socket) => {
-  socket.on('socketping', () => {
-    console.log('Received socketping, sending socketpong');
-    socket.emit('socketpong');
+  socket.broadcast.emit('user.events', 'Someone has joined!');
+  socket.on('name', (name) => {
+      console.log(name + ' says Hello!');
+      socket.broadcast.emit('name', name);
   });
 });
