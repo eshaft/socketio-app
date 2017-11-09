@@ -8,9 +8,10 @@ var io = socketio(server);
 
 app.use(express.static('static'));
 
-io.on('connection', (socket) => {
-  socket.on('socketping', () => {
-    console.log('Received socketping, sending socketpong');
-    socket.emit('socketpong');
-  });
+var namespace = io.of('/namespace');
+
+namespace.on('connection', (socket) => {
+    namespace.emit('event', 'Connected to Namespace');
+    //this is a different namespace
+    io.emit('event', 'normal');
 });
