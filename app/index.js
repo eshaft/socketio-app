@@ -8,9 +8,18 @@ var io = socketio(server);
 
 app.use(express.static('static'));
 
-io.on('connection', (socket) => {
-  socket.on('socketping', () => {
-    console.log('Received socketping, sending socketpong');
-    socket.emit('socketpong');
-  });
-});
+var namespaceHandler = (namespace) => {
+    return (socket) => {
+        socket.emit('event', 'You joined ' + namespace.name);
+        //just resend it
+        socket.on('event', (data) => {
+            socket.broadcast.emit('event', data);
+        });
+    };
+}
+
+var one = io.of('/namespace1');
+var two = io.of('/namespace2');
+
+one.on('connection', namespaceHandler(one));
+two.on('connection', namespaceHandler(two));
